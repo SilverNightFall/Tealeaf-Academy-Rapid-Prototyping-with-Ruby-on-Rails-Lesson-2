@@ -1,0 +1,89 @@
+Name all the 7 (or 8) routes exposed by the resources keyword in the routes.rb file. Also name the 4 named routes, and how the request is routed to the controller/action.
+
+There are 4 basic Restful Routes
+/controllers-name
+/controllers-name/:id
+/controllers-name/:id/edit
+/controllers-name/new
+
+8 routes exposed by using resources
+GET /controllers-name(.:format)  controllers-name#index
+POST  /controllers-name(.:format)  controllers-name#create
+new_post_path GET /controllers-name/new(.:format)  controllers-name#new
+edit_post_path  GET /controllers-name/:id/edit(.:format) controllers-name#edit
+post_path GET /controllers-name/:id(.:format)  controllers-name#show
+PATCH /controllers-name/:id(.:format)  controllers-name#update
+PUT /controllers-name/:id(.:format)  controllers-name#update
+DELETE  /controllers-name/:id(.:format)  controllers-name#destroy
+
+4 named routes
+new_post_path GET /controllers-name/new(.:format)  controllers-name#new
+edit_post_path  GET /controllers-name/:id/edit(.:format) controllers-name#edit
+post_path GET /controllers-name/:id(.:format)  controllers-name#show
+root_path GET / controllers-name#index
+
+What is REST and how does it relate to the resources routes?
+In short it is the principle of the web and how it works with the HTTP Verbs.
+Resources routes creates the urls associated with the conrollers and the views and tells the view how to process it based on the action in the controller. Rails uses HTTP requests to create, read, update, and delete.
+
+What's the major difference between model backed and non-model backed form helpers?
+Model backed form helpers are tied to an object and helps with cross site scripting by generating a authenticity token.  It also reduces the amount of code needed when creating a form. Form helpers use validations from the models and displays errors. Rails helpers also put a hidden field  method that to allow the use of PATCH or DELETE, so you can update or destroy an an object.
+
+How does form_for know how to build the <form> element?
+form_for is a helper method that creates HTML form elements.  It uses the controller actions edit, update or create when working with forms.
+
+
+What's the general pattern we use in the actions that handle submission of model-backed forms (ie, the create and update actions)?
+
+  def create
+    @object = Object.new(object_params)
+      if @object.save
+        flash[:notice] = 'Object was created.'
+      redirect_to controllers_name_path
+      else
+        render :new
+      end
+  end
+
+  def update
+    if @object.update(object_params)
+      flash[:notice] = 'Object was updated.'
+      redirect_to controller_name_singular_path(@object)
+    else
+      render :edit
+    end
+  end
+
+  private
+  def object_params
+    params.require(:model_name).permit(:attribute_name)
+  end
+
+    def set_object
+    @object = Object.find(params[:id])
+  end
+
+
+
+How exactly do Rails validations get triggered? Where are the errors saved? How do we show the validation messages on the user interface?
+Validations are triggered from the model when data is submitted to the database.  They are saved in the objects errors and are outputted using full_messages.
+
+<% if obj.errors.any? %>
+        <ul>
+        <% obj.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+        <% end %>
+        </ul>
+<% end %>
+
+What are Rails helpers?
+Rails helpers are where you put code that is not relevent to your template.
+
+What are Rails partials?
+Partials are named started with an underscore and hold code relevent to the template that is used many times through the application.
+
+When do we use partials vs helpers?
+Partials are for code that is relevent to the template and Rails helpers are for code relevent to your to your entire application or just the specific object helper.
+
+When do we use non-model backed forms?
+When you are not using an ActiveRecord object.
